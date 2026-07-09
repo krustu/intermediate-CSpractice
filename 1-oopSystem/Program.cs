@@ -2,40 +2,55 @@
 using System.Collections.Generic;
 class AnimalShelter
 {
-    static List<Animal> animals = new List<Animal>();
+    static List<Animal> animals = new List<Animal>(); // another name is Feedables
+    static List<IFeedable> feedables = new List<IFeedable>();
+    
     static void Main()
     {
-         Animal g1 = new Dog( "Buddy", 3 , "Bulldog" );
+         Dog g1 = new Dog( "Buddy", 3 , "Bulldog" );
+         Dog g2 = new Dog( "Max", 5 , "Golden Retriever" );
+         Cat c1 = new Cat( "Fluffy", 2 , "Orange" );
+         Cat c2 = new Cat( "Whiskers", 4 , "Black" );
+         Cat c3 = new Cat("Mittens", 1, "White");
          animals.Add(g1);
-         Animal g2 = new Dog( "Max", 5 , "Golden Retriever" );
+         feedables.Add(g1);
          animals.Add(g2);
-         Animal c1 = new Cat( "Fluffy", 2 , "Orange" );
-         Animal c2 = new Cat( "Whiskers", 4 , "Black" );
+         feedables.Add(g2);
          animals.Add(c1);
+         feedables.Add(c1);
          animals.Add(c2);
-         Animal c3 = new Cat("Mittens", 1, "White");
+         feedables.Add(c2);
          animals.Add(c3);
+         feedables.Add(c3);
          foreach (Animal animal in animals)
          {
             animal.Info();
          }
+        
 
-      
+         Console.ReadKey();
+        foreach (IFeedable f in feedables)
+        {
+            f.Feed();
+        }
+
+      /*List<IFeedable> feedables = new List<IFeedable>();
+foreach (IFeedable f in feedables) { f.Feed(); }*/
     }
 }
-class Animal
+interface IFeedable
 {
-    
+    void Feed();
+}
+class Animal //: IFeedable
+{
     public string? Name { get; set; }
     public int Age { get; set; }
+    
     public Animal(string name , int age)
     {
         Name = name;
         Age = age;
-    }
-    public Animal()
-    {
-
     }
 
     public virtual void Info()
@@ -44,12 +59,17 @@ class Animal
     }
 
 }
-class Dog : Animal
+class Dog : Animal , IFeedable
 {
-   string breed {get; set;}
-   public Dog(string name, int age, string Breed) : base(name, age)
+  
+  public void Feed()
     {
-        breed = Breed;
+        Console.WriteLine($"{Name} is eated sasiska.");
+    }
+   public string Breed {get; set;}
+   public Dog(string name, int age, string breed) : base(name, age)
+    {
+        Breed = breed;
     }
     
 
@@ -59,15 +79,16 @@ class Dog : Animal
         base.Info();
     }
 }
-class Cat : Animal
+class Cat : Animal , IFeedable
 {
-    public string? color { get; set; }
-   public Cat()
+    public void Feed()
     {
+        Console.WriteLine($"{Name} is eated fish.");
     }
-   public Cat(string name, int age, string Color) : base(name, age)
+ public string? Color { get; set; }
+   public Cat(string name, int age, string color) : base(name, age)
     {
-        color = Color;
+        Color = color;
     }
     public override void Info()
     {

@@ -112,6 +112,10 @@ class Item : IUse
 
     public Item(string name /*string type , int damage*/)
     {
+        if (string.IsNullOrEmpty(name))
+        {
+            throw new Exception("Name can not be empty");
+        }
         Name = name;
     }
     public virtual void Use()

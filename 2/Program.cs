@@ -1,79 +1,141 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Specialized;
+using System.Configuration.Assemblies;
+using System.Runtime.Intrinsics.X86;
 class Level3
 {
    // static List<IUse> Usable = new List<IUse>();
-    
+    static List<IUse> Usable = new List<IUse>();
     static void Main()
-    {
-        List<IUse> Weapons = new List<IUse>();
-
-    try
 {
-    Console.WriteLine("Введите имя меча:");
-    string? name = Console.ReadLine() ?? "";
-    /*if (name != null)
-            {
-                Sword s1 = new Sword(name);
-                Weapons.Add(s1);
-            }*/
-    Sword s1 = new Sword(name);
-                Weapons.Add(s1);
-    
-    Console.WriteLine("Успешно добавлено");
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"Ошибка: {ex.Message}");
-}
-
-
-
+      
+      while(true)
+      {
         
-        /* 
-            Console.WriteLine("Create the item");
-            Console.ReadKey();
-            
-            Console.WriteLine("Sword - 1");
-            Console.WriteLine("Bow   - 2");
-            Console.WriteLine("Staff - 3");
-            Console.WriteLine("Choose the option");
-            string choice = INput();
-            switch (choice)
+        
+
+ 
+Console.WriteLine("Create the item - 1");
+Console.WriteLine("Show all Items  - 2");
+Console.WriteLine("Exit            - 3");
+
+string choice1 = INput();
+
+switch (choice1)
+{
+    case "1":
+
+        Console.WriteLine("Sword - 1");
+        Console.WriteLine("Bow   - 2");
+        Console.WriteLine("Staff - 3");
+        Console.WriteLine("get back - 4");
+        Console.WriteLine("Choose the option");
+
+        string choice = INput();
+
+        switch (choice)
         {
             case "1":
-              
-            break;
+                try
+                {
+                    Console.WriteLine("Name of sword:");
+                    string nameSword = Console.ReadLine() ?? "";
+
+                    Sword s1 = new Sword(nameSword);
+                    Usable.Add(s1);
+
+                    Console.WriteLine("Added successfully");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+                break;
 
             case "2":
+                try
+                {
+                    Console.WriteLine("Name of Bow:");
+                    string nameBow = Console.ReadLine() ?? "";
 
-            break;
+                    Bow b1 = new Bow(nameBow);
+                    Usable.Add(b1);
+
+                    Console.WriteLine("Added successfully");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+                break;
 
             case "3":
+                try
+                {
+                    Console.WriteLine("Name of Staff:");
+                    string nameStaff = Console.ReadLine() ?? "";
 
-            break;
-                        
+                    Staff st1 = new Staff(nameStaff);
+                    Usable.Add(st1);
+
+                    Console.WriteLine("Added successfully");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+                break;
         }
 
+        break;
+
+           
+            case "4":
+            break;
+                        
+        
+                case "2":
+                    {
+                        foreach(Item item in Usable)
+        {
+            Console.WriteLine("Current list: ");
+            item.Info();
+            Console.WriteLine("Ability :");
+            item.Use();
+
+        };
+                    }
+                break;
+
+                case "3":
+                return;
+            }
 
 
-
-          string ?a = Console.ReadLine();
-            string ?b = Console.ReadLine();
             
+          
+         
+    
+        
+    
+
+        
+    
+           
+    
+    
 
 
-            Sword s1 = new Sword
-            {
-                Name = a,
-                Type = b,
-            };
-           */
 
 
+
+  
+
+    
          
     }
-        
+    }
         public static string INput()
         {
             while (true)
@@ -88,11 +150,11 @@ catch (Exception ex)
                 {
                     Console.WriteLine("Invalid choice. Please write only 1,2,3.");
                    
-                }
             }
         }
-        
     }
+        
+}
 
 
 
@@ -144,7 +206,7 @@ class Bow : Item
 {
     public Bow(string name /*string type , int damage*/) : base(name)
     {
-        Name = name;
+
     }
     public override void Use()
     {
@@ -155,10 +217,33 @@ class Staff : Item
 {
     public Staff(string name /*string type , int damage*/) : base(name)
     {
-        Name = name;
+
     }
     public override void Use()
     {
         Console.WriteLine("casts a spell");
     }
 }
+
+
+/*if (name != null)
+            {
+                Sword s1 = new Sword(name);
+                Weapons.Add(s1);
+            }*/
+
+
+            /* try
+{
+    Console.WriteLine("Введите имя меча:");
+    string? name = Console.ReadLine() ?? "";
+   
+    Sword s1 = new Sword(name);
+                Weapons.Add(s1);
+    
+    Console.WriteLine("Added successfuly");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Error: {ex.Message}");
+}*/

@@ -8,12 +8,25 @@ class level4
     {
         
 
+    Goblin g1 = new Goblin("Хуками", 30, 5);
+    Org o1 = new Org("Гром", 50, 10);
+    Human h1 = new Human("Джонсон", 40, 8);
+
+    Characters.Add(g1);
+    Characters.Add(o1);
+    Characters.Add(h1);
+    
+    g1.Attack(h1);
+
+    Console.ReadKey();
+
+    h1.Info();
     }
 }
 
 interface ILootable
 {
-    void Loot();
+    void GetLoot();
 }
 interface IDamageable
 {
@@ -26,11 +39,18 @@ class Character : IDamageable
     public string? Name{get; set;}
     public int HP{get; set;}
     public int Dmg{get; set;}
+    public bool IsAlive => HP > 0;
     public Character(string name , int hp , int dmg)
     {
         Name = name;
         HP = hp;
         Dmg = dmg;
+    }
+    public virtual void Info()
+    {
+        Console.WriteLine($"name :{Name}");
+        Console.WriteLine($"HP - {HP}");
+        Console.WriteLine($"basic :{Dmg} dmg");
     }
 
     public virtual void TakeDamage(int damage)
@@ -51,21 +71,41 @@ class Goblin : Character , ILootable
     public Goblin(string name , int hp , int dmg ) : base(name,hp,dmg)
     {
     }
-    public void Loot()
+     public void Loot()
+        {
+            Console.WriteLine($"{Name} dropped : 2-Golds , dry org's clothes");
+        }
+    public void GetLoot()
+{
+    
+    if (IsAlive)
     {
-        Console.WriteLine("Looted 2-Gold");
+        throw new Exception($"{Name} is still alive, cannot loot");
     }
+    Loot();
 }
+}
+
 class Org : Character , ILootable
 {
    public Org(string name , int hp , int dmg ) : base(name,hp,dmg)
     {
     }
     public void Loot()
+        {
+            Console.WriteLine($"{Name} dropped : 2-Golds , dry org's clothes");
+        }
+    public void GetLoot()
+{
+    bool IsAlive = true;
+    if (IsAlive)
     {
-        Console.WriteLine("Looted dry org's clothes");
+        throw new Exception($"{Name} is still alive, cannot loot");
     }
+    Loot();
 }
+}
+
 class Human : Character
 {
     public Human(string name , int hp , int dmg ) : base(name,hp,dmg)

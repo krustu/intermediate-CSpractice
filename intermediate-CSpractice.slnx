@@ -12,8 +12,8 @@
   <Project Path="19/19.csproj" />
   <Project Path="2-ItemManager/2.csproj" />
   <Project Path="20/20.csproj" />
-  <Project Path="3/3.csproj" />
-  <Project Path="4/4.csproj" />
+  <Project Path="3-CSharpRGP/3.csproj" />
+  <Project Path="4-LINQ/4.csproj" />
   <Project Path="5/5.csproj" />
   <Project Path="6/6.csproj" />
   <Project Path="7/7.csproj" />

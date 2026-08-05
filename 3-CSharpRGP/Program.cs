@@ -17,7 +17,7 @@ class level4
     Characters.Add(h1);
     
     g1.Attack(h1);
-
+        
     Console.ReadKey();
 
     h1.Info();

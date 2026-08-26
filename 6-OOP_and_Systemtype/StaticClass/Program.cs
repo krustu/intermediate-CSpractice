@@ -16,9 +16,9 @@ class Program
         UserBalance.Add(bank4);
         Console.WriteLine(BankAaccount.TotalAccountsCreated);
         //usd rate 89 per 1 
-        var result = BankUtils.ConvertToUSd(1000, 0.023m);
 
-        Console.WriteLine(result);
+        decimal total = UserBalance.TotalBalance();
+
 
 
         foreach (var account in UserBalance)
@@ -28,6 +28,20 @@ class Program
         }
         Console.ReadKey();
     }
+}
+public static class BankAccountExtensions
+{
+    public static decimal TotalBalance(this List<BankAaccount> accounts)
+    {
+        decimal sum = 0;
+        foreach (var acc in accounts)
+        {
+            sum += acc.GetBalance();
+            Console.WriteLine(sum);
+        }
+        return sum;
+    }
+       
 }
 public static class BankUtils
 {

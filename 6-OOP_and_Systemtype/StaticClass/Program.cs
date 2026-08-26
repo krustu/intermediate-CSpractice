@@ -14,18 +14,21 @@ class Program
         UserBalance.Add(bank3);
         BankAaccount bank4 = new BankAaccount(113.03m, "Keponya");
         UserBalance.Add(bank4);
-        Console.WriteLine(BankAaccount.TotalAccountsCreated);
+        // Console.WriteLine(BankAaccount.TotalAccountsCreated);
         //usd rate 89 per 1 
+        decimal avarage = UserBalance.AverageBalance();
+        //     decimal total = UserBalance.TotalBalance();
 
-        decimal total = UserBalance.TotalBalance();
 
 
 
-        foreach (var account in UserBalance)
-        {
-            var Answer = BankUtils.ConvertToUSd(account.GetBalance(), 0.023m);
-            Console.WriteLine($"user:{account.Name} Balance - {account.GetBalance()} Exchhanged - {Answer} USd");
-        }
+
+        //  foreach (var account in UserBalance)
+        //  {
+        //     var Answer = BankUtils.ConvertToUSd(account.GetBalance(), 0.023m);
+        //      Console.WriteLine($"user:{account.Name} Balance - {account.GetBalance()} Exchhanged - {Answer} USd");
+        // }
+
         Console.ReadKey();
     }
 }
@@ -41,8 +44,23 @@ public static class BankAccountExtensions
         }
         return sum;
     }
-       
+    public static decimal AverageBalance(this List<BankAaccount> acc)
+    {
+        decimal sum = 0;
+        decimal result;
+        foreach (var a in acc)
+        {
+            sum += a.GetBalance();
+            Console.WriteLine(sum); //debug
+        }
+        result = sum / acc.Count;
+        Console.WriteLine("Avarage balance "); //debug
+        Console.WriteLine(result);  //debug
+        return result;
+    }
+
 }
+
 public static class BankUtils
 {
     public static decimal ConvertToUSd(decimal amount, decimal EXchangeRate)

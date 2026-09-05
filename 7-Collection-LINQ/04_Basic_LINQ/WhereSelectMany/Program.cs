@@ -46,12 +46,6 @@ class Program
             Console.WriteLine(name);
         }
 
-        /*
-         
-         * 
-         
-           SelectMany — получи один плоский список всех оценок всех студентов сразу (без разделения по студентам)
-          */
     }
 
     public class Student

@@ -18,4 +18,4 @@ This diagram shows the concept of how the exception hierarchy works.
 
 Examples and practice can be found in the first file, **`Exception-Hierarchy`**.
 
-
+ArgumentException → InvalidOperationException → ArgumentOutOfRangeException.

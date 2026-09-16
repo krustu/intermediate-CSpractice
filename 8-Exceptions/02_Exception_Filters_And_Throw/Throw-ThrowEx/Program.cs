@@ -76,6 +76,30 @@ class BankAccount
     {
         Console.WriteLine("Program closing...");
     }
+    public bool TryWithdraw(decimal amount, out string errorMessage)
+    {
+        errorMessage = "";
+        if (amount > 5000)
+        {
+            errorMessage = "You have reached youy limit";
+            return false;
+        }
+
+        if (amount > _amount)
+        {
+            errorMessage = "You do not have enough money";
+            return false;
+        }
+
+        if (amount < 0)
+        {
+            errorMessage = "Your amount is zero";
+            return false;
+        }
+        _amount -= amount;
+        return true;
+
+    }
     public decimal Withdraw(decimal amount)
     {
         try

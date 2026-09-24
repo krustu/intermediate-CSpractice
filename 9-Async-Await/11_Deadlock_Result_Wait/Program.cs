@@ -1,55 +1,79 @@
 ﻿using System;
-class Program
+using System.Diagnostics;
+class Prgram
 {
     static async Task Main()
     {
+        int num = 5;
+        var time = new Stopwatch();
 
-        int timesec = 5;
-        int CycleNum = 99;
-        using var HandMode = new CancellationTokenSource();
-        using var AutoTime = new CancellationTokenSource(TimeSpan.FromSeconds(timesec));
-
-        using var combined =
-            CancellationTokenSource.CreateLinkedTokenSource(HandMode.Token, AutoTime.Token);
-
-
-
-        try
+        for (int a = 0; a < 5; a++)
         {
-            _ = Task.Run(() =>
-            {
-                Console.WriteLine("press any key to Cancel Imediatelly");
-                Console.ReadKey(true);
-                HandMode.Cancel();
-            });
-            int result = await GetNumber(combined.Token, CycleNum);
-            Console.WriteLine($"Result -{result}");
-        }
-        catch (OperationCanceledException)
-        {
-            if (HandMode.IsCancellationRequested)
-            {
-                Console.WriteLine("Operation was cancelled by hand");
-            }
-            else if (AutoTime.IsCancellationRequested)
-            {
-                Console.WriteLine("Opeartion was canceled by Timeout");
-            }
+            time.Restart();
 
+            var Version1 = await ChainedAsync(num);
+
+            time.Stop();
+            Console.WriteLine($"Fisrt - Async chain bad : {time.ElapsedMilliseconds}");
+
+            time.Restart();
+
+            var Version2 = await GoodChainedAsync(num);
+            time.Stop();
+            Console.WriteLine($"Fisrt - Async chain Good :{time.ElapsedMilliseconds}");
         }
+
+
     }
-    static async Task<int> GetNumber(CancellationToken token, int num)
+    static async Task<int> ChainedAsync(int a)
     {
-        int amount = 0;
-        for (int a = 0; a < num; a++)
-        {
-            await Task.Delay(400, token);
-            amount += num;
-            Console.WriteLine($"Current cycle - {a} | status of amount: {amount}");
-            token.ThrowIfCancellationRequested();
-        }
-
-        return amount;
+        await Task.Delay(1000);
+        var result = await ChainedAsync1(a);
+        return result * 5;
     }
-
+    static async Task<int> ChainedAsync1(int a)
+    {
+        await Task.Delay(1000);
+        var result = await ChainedAsync2(a);
+        return result * 3;
+    }
+    static async Task<int> ChainedAsync2(int a)
+    {
+        await Task.Delay(1000);
+        int amount = a * 10;
+        var result = ChainedAsync3().Result;
+        return amount *= result;
+    }
+    static async Task<int> ChainedAsync3()
+    {
+        int answer = 10;
+        await Task.Delay(1000);
+        return answer * 10;
+    }
+    //--------------------------------------------------------------------------------------------
+    static async Task<int> GoodChainedAsync(int a)
+    {
+        await Task.Delay(1000);
+        var result = await GoodChainedAsync1(a);
+        return result * 5;
+    }
+    static async Task<int> GoodChainedAsync1(int a)
+    {
+        await Task.Delay(1000);
+        var result = await GoodChainedAsync2(a);
+        return result * 3;
+    }
+    static async Task<int> GoodChainedAsync2(int a)
+    {
+        await Task.Delay(1000);
+        int amount = a * 10;
+        var result = await GoodChainedAsync3();
+        return amount *= result;
+    }
+    static async Task<int> GoodChainedAsync3()
+    {
+        int answer = 10;
+        await Task.Delay(1000);
+        return answer * 10;
+    }
 }

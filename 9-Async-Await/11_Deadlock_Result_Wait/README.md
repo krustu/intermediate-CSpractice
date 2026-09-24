@@ -1,15 +1,19 @@
-# CancellationToken – Manual & Timeout Cancellation
+# Async Chain Benchmark
 
-A C# async console app demonstrating cancellation using `CancellationTokenSource`.
+A C# console project comparing two asynchronous method chains using `Stopwatch`.
 
-### Features
+### What it demonstrates
 
-* Manual cancellation by pressing any key.
-* Automatic cancellation after 5 seconds.
-* Linked tokens combine both cancellation sources.
-* `OperationCanceledException` handling with cancellation reason detection.
-* Async loop with cancellation support.
+* `ChainedAsync()` uses `.Result` to synchronously block an async chain.
+* `GoodChainedAsync()` uses `await` correctly.
+* Measures and compares execution time over 5 iterations.
 
-### Concepts
+### Key takeaway
 
-`CancellationToken`, `CancellationTokenSource`, `CreateLinkedTokenSource`, `Task.Delay`, `async/await`, exception handling.
+Avoid `.Result` in async code. Use `await` to prevent blocking and maintain asynchronous execution.
+
+### Technologies
+
+* C#
+* `Task` / `async` / `await`
+* `Stopwatch`

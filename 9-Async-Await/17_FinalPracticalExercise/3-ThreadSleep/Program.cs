@@ -6,16 +6,17 @@ class Program
     {
         var timer = new Stopwatch();
 
-
+        timer.Start();
         var a = GetNumberAsync();
 
         var b = GetNumberAsync();// anotherGetNumberAsync();
 
         var c = anotherGetNumberAsync();
+        var d = anotherGetNumberAsync();
 
 
-        timer.Start();
-        await Task.WhenAll(a, b, c);
+
+        await Task.WhenAll(a, b, c, d);
         timer.Stop();
         Console.WriteLine($"time : {timer.ElapsedMilliseconds}mil.sec");
         // here we see answer 2-0 
@@ -37,7 +38,7 @@ class Program
     {
         return await Task.Run(() =>
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(1500);
             int a = 1;
             return a;
         });

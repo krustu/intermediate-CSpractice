@@ -15,6 +15,7 @@ class Program
 
         try
         {
+            int index = 1;
             while (!cts.Token.IsCancellationRequested)
             {
                 var Tasks = new List<Task<RequestResult>>()
@@ -24,18 +25,44 @@ class Program
             Request3(cts.Token),
 
                 };
+                Task AllTasks = Task.WhenAll(Tasks);
 
-                var answerobj = await Task.WhenAll(Tasks);
-
-                foreach (var result in answerobj)
+                try
                 {
-                    if (result.Error != null)
-                        errors.Add(result);
-                    else
+                    await AllTasks;
+                }
+                catch (OperationCanceledException)
+                {
+
+                }
+
+
+                foreach (var task in Tasks)
+                {
+                    if (task.Status == TaskStatus.RanToCompletion)
                     {
-                        success.Add(result);
+                        var result = task.Result;
+
+
+
+                        if (result.Error != null)
+                        {
+                            result.Error = new Exception($"Error #{index}: {result.Error.Message}"
+                                , result.Error);
+                            errors.Add(result);
+                            index++;
+                        }
+
+
+                        else
+                        {
+                            success.Add(result);
+                        }
                     }
                 }
+                if (cts.Token.IsCancellationRequested)
+                    break;
+
                 await Task.Delay(2000, cts.Token);
 
 
@@ -48,16 +75,27 @@ class Program
         {
             Console.WriteLine(ex.Message);
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
         finally
         {
+            int c = 1;
+            int b = 1;
             Console.WriteLine("Program closing...");
             Console.WriteLine($"Errors count - {errors.Count}");
             Console.WriteLine($"Success count - {success.Count}");
 
+            Console.ReadKey();
+            Console.WriteLine("list of error");
+            foreach (var a in errors)
+            {
+                Console.WriteLine($"{c}- {a.Error.Message}");
+                c++;
+            }
+            Console.WriteLine("list of sucess");
+            foreach (var a in success)
+            {
+                Console.WriteLine($"{b}- {a.Value}");
+                b++;
+            }
         }
 
 
@@ -71,12 +109,16 @@ class Program
                 throw new Exception("Request 1 - Failed!");
             }
             await Task.Delay(1000, Token);
+            Console.WriteLine("Request 1 - completed");
             return new RequestResult
             {
                 Value = "Request 1 - Success"
             };
         }
-
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
 
         catch (Exception ex)
         {
@@ -88,7 +130,7 @@ class Program
         }
         finally
         {
-            Console.WriteLine("Request 1 - completed");
+            Console.WriteLine("Request1 closing..");
         }
 
     }
@@ -102,10 +144,15 @@ class Program
             }
 
             await Task.Delay(2000, Token);
+            Console.WriteLine("Request 2 - completed");
             return new RequestResult
             {
                 Value = "Request 2 - Success"
             };
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
@@ -117,7 +164,7 @@ class Program
         }
         finally
         {
-            Console.WriteLine("Request 2 - completed");
+            Console.WriteLine("Request2 closing..");
         }
 
     }
@@ -130,10 +177,15 @@ class Program
                 throw new Exception("Request 3 - Failed!");
             }
             await Task.Delay(3000, Token);
+            Console.WriteLine("Request 3 - completed");
             return new RequestResult
             {
                 Value = "Request 3 - Success"
             };
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
@@ -145,7 +197,7 @@ class Program
         }
         finally
         {
-            Console.WriteLine("Request 3 - completed");
+            Console.WriteLine("Request3 closing..");
         }
 
     }

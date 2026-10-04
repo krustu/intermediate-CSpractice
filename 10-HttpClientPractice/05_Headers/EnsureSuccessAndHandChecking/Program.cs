@@ -25,6 +25,7 @@ class Program
                 Console.WriteLine($"Request error for URL {url}: {e.Message}");
             }
         }
+        Console.WriteLine("\nHand checking for the status codes:");
         /// Hand checking for the status codes
         foreach (var url in urls)
         {

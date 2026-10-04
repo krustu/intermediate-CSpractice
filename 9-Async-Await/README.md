@@ -1,5 +1,3 @@
-Absolutely. I’ll preserve the technical meaning and turn it into a clean GitHub-style `README.md` with sections, code examples, tables, and key takeaways.
-
 # Async/Await, Task, CancellationToken — Summary
 
 A practical summary of asynchronous programming in C# based on theory and experiments.

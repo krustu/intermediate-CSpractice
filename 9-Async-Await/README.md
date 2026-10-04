@@ -2,8 +2,6 @@
 
 A practical summary of asynchronous programming in C# based on theory and experiments.
 
----
-
 ## 1. Thread vs Task
 
 ### `Thread`
@@ -868,17 +866,13 @@ await Task.Run(() => HeavyCalculation());
 ```
 
 For cancellation:
-
 ```csharp
 await SomeOperationAsync(token);
 ```
-
 For multiple independent operations:
-
 ```csharp
 await Task.WhenAll(tasks);
 ```
-
 Once these patterns become intuitive, `async`/`await`, `Task`, `CancellationToken`, `WhenAll`, and `WhenAny` stop looking like a collection of unrelated APIs and become parts of one coherent model.
 
 This version should work well as a GitHub README and as a revision sheet before an interview/exam.

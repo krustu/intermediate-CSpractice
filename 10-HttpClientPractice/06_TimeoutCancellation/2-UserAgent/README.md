@@ -1,12 +1,19 @@
-# Parallel Request Practice
+# HttpClient — User-Agent
 
-A C# async practice project demonstrating:
+A simple C# example showing how to change the **User-Agent** header with `HttpClient`.
 
-- Running multiple requests concurrently with `Task.WhenAll`
-- Handling successful and failed requests
-- Cancellation with `CancellationToken`
-- Graceful shutdown with `Ctrl+C`
-- Repeating requests in a cancellable loop
-- Collecting successful results and errors
+### What it demonstrates
+- Sending GET requests with `HttpClient`
+- Checking the default User-Agent behavior
+- Adding a custom User-Agent using `DefaultRequestHeaders`
+- Comparing server responses before and after the header change
+- Reading `HttpResponseMessage` content and status codes
+- Using `async/await`
 
-The requests simulate different delays and random failures.
+### APIs Used
+- `HttpClient`
+- `GetStringAsync()`
+- `GetAsync()`
+- `DefaultRequestHeaders.Add()`
+- `ReadAsStringAsync()`
+- `StatusCode`

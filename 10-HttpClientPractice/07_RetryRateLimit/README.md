@@ -1,12 +1,26 @@
-# Parallel Request Practice
+# HTTP Requests: Concurrency & Retry
 
-A C# async practice project demonstrating:
+A C# example demonstrating concurrent requests, sequential requests with delays, retry logic, and the `Retry-After` header.
 
-- Running multiple requests concurrently with `Task.WhenAll`
-- Handling successful and failed requests
-- Cancellation with `CancellationToken`
-- Graceful shutdown with `Ctrl+C`
-- Repeating requests in a cancellable loop
-- Collecting successful results and errors
+## What it demonstrates
 
-The requests simulate different delays and random failures.
+- `Task.WhenAll` for concurrent requests
+- Sequential requests with `Task.Delay`
+- Retry logic for transient HTTP errors
+- Exponential backoff: `1s → 2s → 4s`
+- Handling `Retry-After` response headers
+- Measuring execution time with `Stopwatch`
+
+## Key difference
+
+**Concurrent:**
+text
+10 requests → sent almost simultaneously
+```
+
+**Sequential:**
+text
+Request → wait 500ms → Request → wait 500ms → ...
+```
+
+The program compares both approaches and reads the server's suggested `Retry-After` delay.

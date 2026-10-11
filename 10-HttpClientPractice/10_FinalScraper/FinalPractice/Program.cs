@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.Design;
 using System.Net;
 class Program
 {
@@ -104,27 +105,50 @@ public class GitHubClient
     }
     public async Task<string> GetRepositoryAsync(string owner, string repo, CancellationToken ct)
     {
+        using HttpResponseMessage response =
+            await GetWithRetryAsync($"https://api.github.com/repos/{owner}/{repo}", ct);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Task<string> Asnw = response.Content.ReadAsStringAsync(ct);
+
+            return await Asnw;
+        }
+        else
+        {
+            throw new HttpRequestException(DescribeError(response.StatusCode, repo));
+        }
 
     }
     private async Task<HttpResponseMessage> GetWithRetryAsync(string url, CancellationToken ct)
     {
-        int Maxattempts = 3;
-        for (int attempts = 0; ; attempts++)
+        int Maxattempts = 4;
+        for (int attempts = 1; ; attempts++)
         {
             try
             {
-                HttpResponseMessage response = await _httpClient.GetAsync(url, ct);
+                using HttpResponseMessage response =
+                    await _httpClient.GetAsync(url, ct);
 
                 if (IsTransient(response))
                 {
                     return response;
                 }
-                /// Console.WriteLine($"attempts {attempts}")
+                /* else if (!IsTransient(response))
+                 {
+                     string a = DescribeError(response.StatusCode);
+
+                 }*/
+                Console.WriteLine($"attempts {attempts}: {(int)response.StatusCode}, repeat");
             }
             catch (HttpRequestException) when (attempts < Maxattempts)
             {
-                Console.WriteLine($"attempts {attempts}: }")
+                Console.WriteLine($"attempts {attempts}: response failed, repeat");
+
             }
+
+            TimeSpan delay = TimeSpan.FromSeconds(Math.Pow(2, attempts - 1));
+            await Task.Delay(delay, ct);
         }
     }
     private static bool IsTransient(HttpResponseMessage response)
@@ -161,7 +185,8 @@ public class GitHubClient
 
             default:
                 if ((int)code >= 500)
-                    return "GitHub server error";
+                    return "GitHub server error.";
+                return $"HTTP error {(int)code}({code}).";
 
         }
 

@@ -1,0 +1,22 @@
+{
+  "title": "RealEstateAggregator",
+  "isNew": true,
+  "Folders": 9,
+  "author": "Krustu",
+  "Program Language": "C#",
+  "deployedUrl": null,
+  "contacts": {
+    "phone": "+996555333333",
+    "Tg": "@KRustu12"
+  },
+  "sources": [
+    {
+      "name": "House.kg",
+      "status": "down"
+    },
+    {
+      "name": "Lalafo",
+      "status": "working"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": 231,
+  "title": "3 rooms, 98m2",
+  "price": 190000.0,
+  "currency": "USD",
+  "isNew": true,
+  "floor": 7,
+  "location": {
+    "city": "Bishkek",
+    "district": "Centrum"
+  },
+  "photos": [ "a.jpg", "b.jpg" ],
+  "contacts": [
+    {
+      "type": "phone",
+      "value": "+996 555 114 453"
+    },
+    {
+      "type": "Whatsapp","value": "@seller"
+    }
+  ]
+}

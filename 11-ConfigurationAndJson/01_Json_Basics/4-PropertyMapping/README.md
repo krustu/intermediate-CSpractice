@@ -1,2 +1,5 @@
-# What I do
-in this file we show basic sintax od Json, and make own.
+# What I did
+
+# What I learned 
+
+# Conclusion 

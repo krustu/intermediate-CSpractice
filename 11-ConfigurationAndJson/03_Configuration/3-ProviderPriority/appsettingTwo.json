@@ -1,0 +1,10 @@
+{
+  "CheckIntervalMinutes": 5,
+  "MaxPagesPerCheck": 5,
+  "DelayBetweenPagesSeconds": 1,
+  "RetryCount": 10,
+  "Telegram": {
+    "BotName": "Krustu"
+  }
+
+}

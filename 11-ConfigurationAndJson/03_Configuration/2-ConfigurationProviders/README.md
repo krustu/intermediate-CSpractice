@@ -1,18 +1,21 @@
-# JSON и конфигурация в C#
+# Configuration Providers
 
-Практика по System.Text.Json и Microsoft.Extensions.Configuration.
+A provider is a source of configuration settings. Each `.AddXxx(...)` call adds a source to the `ConfigurationBuilder`, and `Build()` combines them into a single `IConfiguration`.
 
-## Что в папке
-- 01_Json_Basics: синтаксис JSON, Serialize/Deserialize, DTO, JsonPropertyName, JsonSerializerOptions
-- 02_Json_Advanced: nullable-поля, JsonDocument, JsonException
-- 03_Configuration: IConfiguration, чтение из appsettings.json
+## Types of Providers
 
-## Что я понял
-- Зачем нужен DTO отдельно от доменной модели: "to catch first prototype of information with using DTOclass then pass after refuctoring information our main class that has other proporties"
-- Что происходит, когда в JSON битый синтаксис, и где это ловить: need to check when you requesting the result , with try catch or ??(for some cases)
-- Почему настройки лежат в файле, а не в коде: "To hide information as Telegram token etc"
-- Чем отличается обязательная настройка от необязательной: 
+- `AddJsonFile` — reads settings from a JSON file (`appsettings.json`).
+- `AddInMemoryCollection` — reads settings from a dictionary in code, useful for testing and experiments.
+- `AddEnvironmentVariables` — reads environment variables.
+- **User Secrets** — stores secrets outside the repository for development.
+- **Command-line arguments** — passes settings when starting the application.
 
-## Как запустить
-dotnet run в нужной подпапке. Для 03_Configuration нужен пакет
-Microsoft.Extensions.Configuration.Json и Copy to Output Directory: Copy if newer.
+## Key Rule: Provider Priority
+
+If multiple providers contain the same key, **the last registered provider takes priority**.
+
+See `3-ProviderPriority` for an example.
+
+## What I've Learned
+
+Implemented configuration using a JSON file and an in-memory provider. The remaining providers will be covered in the following folders.

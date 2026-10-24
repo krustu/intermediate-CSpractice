@@ -1,64 +1,60 @@
-# JSON & Configuration in C#
+# Из какого источника пришло значение
 
-## Goal
-Learn to deserialize JSON into C# objects and understand how .NET applications load configuration settings.
+Код, который печатает, какой источник конфигурации (файл, переменная окружения) дал значение ключа.
 
-## 01_Json_Basics
+## Зачем
+Когда один ключ есть в нескольких источниках, побеждает добавленный последним. Этот код показывает, кто победил. Так ищут причину, когда программа берёт не то значение, которое ты ожидал.
 
-Learn how to work with JSON and C# objects.
+## Пакеты
+- `Microsoft.Extensions.Configuration.Json`: `AddJsonFile`
+- `Microsoft.Extensions.Configuration.EnvironmentVariables`: `AddEnvironmentVariables`
 
-- JSON syntax: types, arrays, nested objects, and null.
-- `System.Text.Json` vs. `Newtonsoft.Json`.
-- `Serialize()` and `Deserialize<T>()`.
-- DTOs and domain models.
-- `[JsonPropertyName]` and property mapping.
-- `JsonSerializerOptions` and case sensitivity.
+## Код
+```csharp
+using Microsoft.Extensions.Configuration;
 
-**Goal:** Deserialize API responses into DTOs and serialize objects into JSON.
+Environment.SetEnvironmentVariable("Scraper__CheckIntervalMinutes", "77");   // до Build()
 
-## 02_Json_Advanced
+IConfigurationRoot config = new ConfigurationBuilder()
+    .AddJsonFile("appsettingTwo.json", optional: false)
+    .AddEnvironmentVariables()
+    .Build();
 
-Learn to handle unpredictable JSON data and errors.
+string key = "Scraper:CheckIntervalMinutes";
 
-- Nullable properties and missing keys.
-- `JsonDocument` and `JsonElement`.
-- `JsonException` and error handling.
+foreach (IConfigurationProvider provider in config.Providers.Reverse())
+{
+    if (provider.TryGet(key, out string? value))
+    {
+        Console.WriteLine($"{key} = {value} from {provider}");
+        break;
+    }
+}
+```
 
-**Goal:** Safely process incomplete or invalid JSON.
+## Как это работает
+- `IConfigurationRoot` это то, что возвращает `Build()`. У него есть список источников `Providers` в порядке добавления. У обычного `IConfiguration` такого списка нет.
+- `Reverse()` переворачивает список, чтобы идти с последнего источника (нужен `using System.Linq;`, если подчёркнуто).
+- `provider.TryGet(key, out value)` спрашивает конкретный источник, есть ли у него ключ.
+- Первый найденный с конца и есть победитель, дальше `break`.
+- Ключ пишется полностью, с секцией: `Scraper:CheckIntervalMinutes`. В имени переменной окружения вместо `:` ставится `__`.
 
-## 03_Configuration
+## Результат
+С переменной окружения:
+```
+Scraper:CheckIntervalMinutes = 77 from EnvironmentVariablesConfigurationProvider
+```
+Без неё (строку `SetEnvironmentVariable` закомментировать):
+```
+Scraper:CheckIntervalMinutes = 5 from JsonConfigurationProvider for 'appsettingTwo.json' (Required)
+```
 
-Understand how .NET applications load settings.
+## Ошибки, которые у меня были
+- `CS1061: IConfiguration does not contain a definition for 'Providers'`: тип переменной нужно поменять на `IConfigurationRoot`.
+- Вывод пустой: в `TryGet` ключ был без секции (`CheckIntervalMinutes` вместо `Scraper:CheckIntervalMinutes`).
+- Переменная окружения не срабатывала: в цепочке `ConfigurationBuilder` не было `.AddEnvironmentVariables()`. Источник нужно подключать явно, а `SetEnvironmentVariable` должен быть до `Build()`.
 
-- `IConfiguration`.
-- Configuration providers.
-- Provider priority and overriding values.
-- `appsettings.json` and environment-specific files.
-- Environment variables and the `__` separator.
-- User Secrets.
-- `GetSection()`, `Get<T>()`, and configuration binding.
-
-**Goal:** Understand where application settings come from and how to manage them.
-
-## 04_Options_And_Security
-
-Learn to manage configuration through dependency injection and protect sensitive data.
-
-- Options Pattern: `IOptions<T>`, `IOptionsSnapshot<T>`, and `IOptionsMonitor<T>`.
-- Binding settings to classes.
-- Dependency injection.
-- API keys, passwords, and tokens.
-- Keeping secrets out of Git and application logs.
-
-**Goal:** Use strongly typed configuration and handle secrets safely.
-
-## Practical Project
-
-Build a console application that:
-
-1. Loads settings from configuration.
-2. Uses `HttpClient` to call an API.
-3. Deserializes JSON into DTOs.
-4. Handles errors and missing data.
-5. Supports environment variable overrides.
-6. Keeps secrets out of source control.
+## Что я понял
+- Источник конфигурации называется провайдером, и каждый `Add...` добавляет один.
+- Последний добавленный провайдер побеждает, поэтому переменная окружения перекрыла файл (77 вместо 5).
+- Переменные окружения нужны, чтобы менять настройки и задавать секреты на сервере, не трогая код и файл.

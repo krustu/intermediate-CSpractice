@@ -1,21 +1,22 @@
-# Cohesion (связность)
+# Constructor Injection
 
-**Идея:** связность показывает, насколько методы класса про одну тему. Тест: опиши класс одним предложением **без слова «и»**.
+**Idea:** a class gets its dependencies through the constructor and stores them in `readonly` fields. It does not create them itself.
 
-## Что я делал
-`Ordermanager` считал сумму, печатал чек, хранил историю и слал письмо. Разбил на классы по одной теме:
+## What I did
+`ReportService(IDataSource source, IMessageSender sender)`. The method `Run()` takes numbers from `_source`, calculates the sum, and sends it with `_sender`.
 
-- `CalculateSum`: считает сумму и налоги
-- `OrderHistory`: хранит историю (список приватный, наружу `IReadOnlyList`)
-- `SaveReceipt`: формирует строку чека и кладёт её в историю
-- `ShowReceipt`: печатает историю
-- (`EmailSender`: заглушка отправки)
+## Why the constructor, not a public property
+- With a property the object can be created without its dependency, and the program crashes later with `NullReferenceException`.
+- With a constructor the compiler does not allow `new ReportService()` without arguments.
+- `ArgumentNullException.ThrowIfNull(...)` catches `null` at creation time, not later.
+- The dependencies are visible in one place, and `readonly` protects them from changes.
 
-## Ошибки, которые я поймал
-- Сделал общий `DataCenter` (налоги + история), и связность упала снова. Проверка одним предложением это показала.
-- Передал зависимости во все классы «на всякий случай». Конструктор должен принимать **только то, что класс реально использует**.
-- Публичный `List` позволяет любому коду его менять, поэтому лучше отдавать `IReadOnlyList`.
-- `ref` меняет чужую переменную скрытно, лучше возвращать значение.
+## Mistakes I made
+- I passed dependencies but did not use them. `Run(int[] numbers)` got the data from `Main`, so the injection did nothing. Test: swap the source.
+- If the result does not change, the dependency is unused.
+- One class played two roles (data source and sender). Each role needs its own class.
+- A big `try/catch` in `Main` hid a programmer error. `ArgumentNullException` should crash loudly.
 
-## Главное
-Хорошая архитектура = **высокая связность** внутри класса + **низкая связанность** между классами.
+## Warning sign
+If a constructor has many parameters (5-6 or more), the class probably does too much.
+and it does need to separate two or more classes.

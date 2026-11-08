@@ -1,3 +1,4 @@
+# What does it for? and What I understood
 Business logic should not know about HTTP or SQL because these are infrastructure details that change often,
 while the business rules stay the same. If the logic is separated behind an interface,
 we can switch from an API to a database without rewriting the rules.
